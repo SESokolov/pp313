@@ -1,0 +1,46 @@
+#debug: true
+
+server:
+  port: 8080
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: springboot-pp312
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/pp312
+    username: postgres
+    password: Pgpass
+  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        hbm2ddl:
+          charset_name: UTF-8
+          import_files: init-data.sql
+    open-in-view: false
+  devtools:
+    livereload:
+      enabled: true
+    add-properties: true
+  mvc:
+    view:
+      prefix: /WEB-INF/templates/
+      suffix: .html
+  web:
+    locale: ru_RU
+
+
+logging:
+  charset:
+    console: UTF-8
+#  level: info
