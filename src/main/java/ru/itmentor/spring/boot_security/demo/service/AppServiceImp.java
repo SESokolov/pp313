@@ -16,8 +16,10 @@ import ru.itmentor.spring.boot_security.demo.model.Role;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.repository.RoleRepository;
 import ru.itmentor.spring.boot_security.demo.repository.UserRepository;
+import ru.itmentor.spring.boot_security.demo.util.UserNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -65,7 +67,8 @@ public class AppServiceImp implements AppService {
 
     @Override
     public User readUser(long id) {
-        return userDao.readUser(id);
+        Optional<User> user = userRepository.findById(id);
+        return user.orElseThrow(UserNotFoundException::new);
     }
 
     @Override

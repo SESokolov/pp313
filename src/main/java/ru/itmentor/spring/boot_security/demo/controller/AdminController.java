@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.AppService;
+import ru.itmentor.spring.boot_security.demo.util.UserNotUpdatedException;
 
 import javax.validation.Valid;
 
@@ -40,7 +41,7 @@ public class AdminController {
     public String editUserForm(@PathVariable(value = "id", required = true) Long userId, Model model) {
         try {
             model.addAttribute("user", appService.readUser(userId));
-        } catch (EmptyResultDataAccessException e) {
+        } catch (UserNotUpdatedException e) {
             e.printStackTrace();
             return "redirect:/admin";
         }

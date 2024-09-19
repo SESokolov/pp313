@@ -7,7 +7,7 @@ server:
 
 spring:
   application:
-    name: springboot-pp312
+    name: springboot-pp313
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/pp312
