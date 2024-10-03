@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.AppService;
 import ru.itmentor.spring.boot_security.demo.util.UserErrorResponse;
-import ru.itmentor.spring.boot_security.demo.util.UserNotCreatedException;
+import ru.itmentor.spring.boot_security.demo.util.UserNotSaveException;
 import ru.itmentor.spring.boot_security.demo.util.UserNotFoundException;
-import ru.itmentor.spring.boot_security.demo.util.UserNotUpdatedException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -40,7 +39,7 @@ public class AdminRESTController {
         try {
             appService.saveUser(user);
         }
-        catch (UserNotCreatedException e) {
+        catch (UserNotSaveException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -60,9 +59,14 @@ public class AdminRESTController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<HttpStatus> updateUser(@PathVariable("id") long id, @Valid @RequestBody User user) {
-        appService.saveUser(user);
+    @PutMapping("/update")
+    public ResponseEntity<HttpStatus> updateUser(@Valid @RequestBody User user) {
+        try {
+            appService.saveUser(user);
+        }
+        catch (UserNotSaveException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -77,16 +81,7 @@ public class AdminRESTController {
     }
 
     @ExceptionHandler
-    private ResponseEntity<UserErrorResponse> handleException(UserNotCreatedException e) {
-        UserErrorResponse response = new UserErrorResponse(
-                e.getMessage(),
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<UserErrorResponse> handleException(UserNotUpdatedException e) {
+    private ResponseEntity<UserErrorResponse> handleException(UserNotSaveException e) {
         UserErrorResponse response = new UserErrorResponse(
                 e.getMessage(),
                 System.currentTimeMillis()

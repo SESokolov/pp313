@@ -2,7 +2,6 @@ package ru.itmentor.spring.boot_security.demo.controller;
 
 import org.hibernate.AssertionFailure;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
@@ -10,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.AppService;
-import ru.itmentor.spring.boot_security.demo.util.UserNotUpdatedException;
+import ru.itmentor.spring.boot_security.demo.util.UserNotSaveException;
 
 import javax.validation.Valid;
 
@@ -41,7 +40,7 @@ public class AdminController {
     public String editUserForm(@PathVariable(value = "id", required = true) Long userId, Model model) {
         try {
             model.addAttribute("user", appService.readUser(userId));
-        } catch (UserNotUpdatedException e) {
+        } catch (UserNotSaveException e) {
             e.printStackTrace();
             return "redirect:/admin";
         }
