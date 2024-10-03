@@ -3,9 +3,6 @@ package ru.itmentor.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.AppService;
@@ -39,16 +36,13 @@ public class AdminRESTController {
     }
 
     @PostMapping("new")
-    public ResponseEntity<HttpStatus> createUser(@Valid @RequestBody User user, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            StringBuilder errors = new StringBuilder();
-            List<FieldError> allErrors = bindingResult.getFieldErrors();
-            for (FieldError error : allErrors) {
-                errors.append(error.getField() + " - " + error.getDefaultMessage() + ";");
-            }
-            throw new UserNotCreatedException(errors.toString());
+    public ResponseEntity<HttpStatus> createUser(@Valid @RequestBody User user) {
+        try {
+            appService.saveUser(user);
         }
-        appService.saveUser(user, bindingResult, model);
+        catch (UserNotCreatedException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -67,17 +61,8 @@ public class AdminRESTController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<HttpStatus> updateUser(@PathVariable("id") long id, @Valid @RequestBody User user, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            StringBuilder errors = new StringBuilder();
-            List<FieldError> allErrors = bindingResult.getFieldErrors();
-            for (FieldError error : allErrors) {
-                errors.append(error.getField() + " - " + error.getDefaultMessage() + ";");
-            }
-            throw new UserNotUpdatedException(errors.toString());
-        }
-
-        appService.saveUser(user, bindingResult, model);
+    public ResponseEntity<HttpStatus> updateUser(@PathVariable("id") long id, @Valid @RequestBody User user) {
+        appService.saveUser(user);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }

@@ -25,4 +25,7 @@ public interface AppService extends UserDetailsService {
     void authenticateOrLogout(Model model, HttpSession session, LoginException authenticationException, String authenticationName);
 
     boolean saveUser(User user, BindingResult bindingResult, Model model);
+
+    //for REST
+    void saveUser(User user);
 }

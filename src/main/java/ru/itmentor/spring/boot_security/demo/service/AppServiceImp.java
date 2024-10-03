@@ -16,6 +16,7 @@ import ru.itmentor.spring.boot_security.demo.model.Role;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.repository.RoleRepository;
 import ru.itmentor.spring.boot_security.demo.repository.UserRepository;
+import ru.itmentor.spring.boot_security.demo.util.UserNotCreatedException;
 import ru.itmentor.spring.boot_security.demo.util.UserNotFoundException;
 
 import java.util.List;
@@ -63,6 +64,18 @@ public class AppServiceImp implements AppService {
         }
 
         return true;
+    }
+
+    //for REST
+    @Override
+    public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        try {
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException e) { // org.hibernate.exception.ConstraintViolationException
+            throw new UserNotCreatedException(e.getMessage());
+        }
     }
 
     @Override
